@@ -1,4 +1,6 @@
 KSQL example UDF for looking up a City for an IP address.
+### Pre-requisite
+You'll need to supply your own GeoLite database, unzip it into `main/resources`, and specify the filename in `src/main/java/com/github/cjmatta/kafka/ksql/udfs/GetCityForIP.java`
 
 ### Build
 ```

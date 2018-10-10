@@ -9,7 +9,7 @@ import java.io.IOException;
 public class GetCityForIPTest {
 
   @Test
-  public void getCityForIP() throws IOException, GeoIp2Exception {
+  public void getCityForIPTest() throws IOException, GeoIp2Exception {
     GetCityForIP getCityForIP = new GetCityForIP();
     assertEquals("Philadelphia", getCityForIP.getcityforip("68.80.162.250"));
   }
