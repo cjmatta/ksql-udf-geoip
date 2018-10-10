@@ -33,7 +33,7 @@ public class GetCityForIP {
       throw new ExceptionInInitializerError(e);
     }
   }
-  
+
   @Udf(description = "returns city from IP input")
   public String getcityforip(String ip) {
     try {
