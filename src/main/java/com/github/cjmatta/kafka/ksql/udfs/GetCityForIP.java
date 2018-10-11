@@ -31,6 +31,7 @@ public class GetCityForIP implements Configurable {
     try {
       database = new File(geoliteDbPath);
       reader = new DatabaseReader.Builder(database).build();
+      log.info("loaded GeoIP database from " + geoliteDbPath.toString());
     } catch (IOException e) {
       log.error("Problem loading GeoIP database: " + e);
       throw new ExceptionInInitializerError(e);
