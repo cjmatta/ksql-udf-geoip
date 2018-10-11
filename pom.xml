@@ -20,6 +20,11 @@
             <version>${ksql.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.confluent.ksql</groupId>
+            <artifactId>ksql-common</artifactId>
+            <version>${ksql.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.maxmind.geoip2</groupId>
             <artifactId>geoip2</artifactId>
             <version>${geoip2.version}</version>

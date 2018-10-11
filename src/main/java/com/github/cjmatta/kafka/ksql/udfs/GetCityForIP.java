@@ -3,30 +3,31 @@ package com.github.cjmatta.kafka.ksql.udfs;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
-import com.maxmind.geoip2.model.EnterpriseResponse;
 import com.maxmind.geoip2.record.City;
-import com.maxmind.geoip2.record.Location;
-import io.confluent.ksql.function.udaf.UdafDescription;
+import io.confluent.common.Configurable;
 import io.confluent.ksql.function.udf.Udf;
-import sun.misc.IOUtils;
+import io.confluent.ksql.function.udf.UdfDescription;
+import io.confluent.ksql.util.KsqlConfig;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.Map;
 
-@UdafDescription(name="geoip_lookup", description = "Function to lookup ip -> city information ")
-public class GetCityForIP {
-  private ClassLoader classLoader = this.getClass().getClassLoader();
-  private static File database;
-  private static DatabaseReader reader;
+@UdfDescription(name="getcityforip", description = "Function to lookup ip -> city information ")
+public class GetCityForIP implements Configurable {
 
-  static {
+  private DatabaseReader reader;
+
+  @Override
+  public void configure(final Map<String, ?> props) {
+    File database;
+    final KsqlConfig config = new KsqlConfig(props);
+
+    final String geoliteDbPath = config.originalsStrings().get("geolite.db.path");
+
     try {
-      database = new File(System.getProperty("geolite.db.path"));
+      database = new File(geoliteDbPath);
       reader = new DatabaseReader.Builder(database).build();
     } catch (IOException e) {
       System.out.println(e.toString());
@@ -42,6 +43,7 @@ public class GetCityForIP {
       City city = response.getCity();
       return city.getName();
     } catch (IOException | GeoIp2Exception e) {
+      System.out.println(e);
       return null;
     }
   }
