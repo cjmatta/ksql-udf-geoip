@@ -8,6 +8,8 @@ import io.confluent.common.Configurable;
 import io.confluent.ksql.function.udf.Udf;
 import io.confluent.ksql.function.udf.UdfDescription;
 import io.confluent.ksql.util.KsqlConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,19 +20,19 @@ import java.util.Map;
 public class GetCityForIP implements Configurable {
 
   private DatabaseReader reader;
+  private Logger log = LoggerFactory.getLogger(GetCityForIP.class);
 
   @Override
   public void configure(final Map<String, ?> props) {
     File database;
-    final KsqlConfig config = new KsqlConfig(props);
-
-    final String geoliteDbPath = config.originalsStrings().get("geolite.db.path");
+//    final KsqlConfig config = new KsqlConfig(props);
+    final String geoliteDbPath = props.get("geolite.db.path").toString();
 
     try {
       database = new File(geoliteDbPath);
       reader = new DatabaseReader.Builder(database).build();
     } catch (IOException e) {
-      System.out.println(e.toString());
+      log.error("Problem loading GeoIP database: " + e);
       throw new ExceptionInInitializerError(e);
     }
   }
@@ -43,7 +45,7 @@ public class GetCityForIP implements Configurable {
       City city = response.getCity();
       return city.getName();
     } catch (IOException | GeoIp2Exception e) {
-      System.out.println(e);
+      log.error("Error looking up City for IP: " + e);
       return null;
     }
   }

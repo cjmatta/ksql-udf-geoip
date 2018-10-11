@@ -1,6 +1,6 @@
 KSQL example UDF for looking up a City for an IP address.
 ### Pre-requisite
-You'll need to supply your own GeoLite database, specify it's location using the `geolite.db.path` property in your ksql-server.properties before starting KSQL.
+You'll need to supply your own GeoLite database, specify it's location using the `function.getcityforip.geolite.db.path` property in your ksql-server.properties before starting KSQL.
 
 
 ### Build
