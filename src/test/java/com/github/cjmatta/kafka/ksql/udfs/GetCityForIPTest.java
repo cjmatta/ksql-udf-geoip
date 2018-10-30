@@ -17,12 +17,12 @@ public class GetCityForIPTest {
   @Before
   public void setUp() {
     udf = new GetCityForIP();
-    configure("/Users/chris/Downloads/GeoLite2-City_20181009/GeoLite2-City.mmdb");
+    configure(getClass().getClassLoader().getResource("GeoIP2-City-Test.mmdb").getFile());
   }
 
   @Test
   public void getCityForIPTest() throws IOException, GeoIp2Exception {
-    assertEquals("Philadelphia", udf.getcityforip("68.80.162.250"));
+    assertEquals("London", udf.getcityforip("81.2.69.160"));
   }
 
   private void configure(String mmdbPath) {
