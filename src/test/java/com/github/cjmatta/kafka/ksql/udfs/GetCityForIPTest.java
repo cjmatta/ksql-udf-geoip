@@ -5,11 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GetCityForIPTest {
 
@@ -17,17 +15,28 @@ public class GetCityForIPTest {
   @Before
   public void setUp() {
     udf = new GetCityForIP();
-    configure("/Users/chris/Downloads/GeoLite2-City_20181009/GeoLite2-City.mmdb");
+    File mmDb = new File("src/test/resources/GeoLite2-City/GeoLite2-City.mmdb");
+    configure(mmDb.getAbsolutePath());
   }
 
   @Test
   public void getCityForIPTest() throws IOException, GeoIp2Exception {
-    assertEquals("Philadelphia", udf.getcityforip("68.80.162.250"));
+    Map<String, String> cityMap = new HashMap<>();
+    cityMap.put("128.106.20.194", "Singapore");
+    cityMap.put("68.80.162.250", "Philadelphia");
+    cityMap.put("49.217.88.22", "Taipei");
+    cityMap.put("138.197.66.165", "Clifton");
+
+    Iterator it = cityMap.entrySet().iterator();
+    while(it.hasNext()) {
+      Map.Entry pair = (Map.Entry) it.next();
+      assertEquals(pair.getValue(), udf.getcityforip(pair.getKey().toString()));
+    }
   }
 
   private void configure(String mmdbPath) {
     Map<String, String> config = new HashMap<String, String>();
-    config.put("geolite.db.path", mmdbPath);
+    config.put("ksql.functions.getcityforip.geolite.db.path", mmdbPath);
     udf.configure(Collections.unmodifiableMap(new LinkedHashMap<String, String>(config)));
   }
 }

@@ -7,7 +7,7 @@ import com.maxmind.geoip2.record.City;
 import io.confluent.common.Configurable;
 import io.confluent.ksql.function.udf.Udf;
 import io.confluent.ksql.function.udf.UdfDescription;
-import io.confluent.ksql.util.KsqlConfig;
+import io.confluent.ksql.function.udf.UdfParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class GetCityForIP implements Configurable {
   public void configure(final Map<String, ?> props) {
     File database;
 //    final KsqlConfig config = new KsqlConfig(props);
-    final String geoliteDbPath = props.get("geolite.db.path").toString();
+    final String geoliteDbPath = props.get("ksql.functions.getcityforip.geolite.db.path").toString();
 
     try {
       database = new File(geoliteDbPath);
@@ -39,11 +39,20 @@ public class GetCityForIP implements Configurable {
   }
 
   @Udf(description = "returns city from IP input")
-  public String getcityforip(String ip) {
+  public String getcityforip(
+    @UdfParameter(value = "ip", description = "the IP address to lookup in the geoip database") String ip
+  ) {
+
+    if (ip == "") {
+      return null;
+    }
+
     try {
+      log.debug("Lookup up City for IP: " + ip);
       InetAddress ipAddress = InetAddress.getByName(ip);
       CityResponse response = reader.city(ipAddress);
       City city = response.getCity();
+      log.debug("Got result: " + city.getName().toString());
       return city.getName();
     } catch (IOException | GeoIp2Exception e) {
       log.error("Error looking up City for IP: " + e);
