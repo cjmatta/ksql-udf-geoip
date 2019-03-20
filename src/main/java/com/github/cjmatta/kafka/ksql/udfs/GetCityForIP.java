@@ -24,9 +24,9 @@ public class GetCityForIP implements Configurable {
 
   @Override
   public void configure(final Map<String, ?> props) {
+    log.debug("Configure run");
     File database;
-//    final KsqlConfig config = new KsqlConfig(props);
-    final String geoliteDbPath = props.get("ksql.functions.getcityforip.geolite.db.path").toString();
+    final String geoliteDbPath = (String)props.get("ksql.functions.getcityforip.geolite.db.path");
 
     try {
       database = new File(geoliteDbPath);
