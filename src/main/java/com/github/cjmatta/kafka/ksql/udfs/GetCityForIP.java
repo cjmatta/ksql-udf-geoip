@@ -9,9 +9,11 @@ import io.confluent.common.config.ConfigException;
 import io.confluent.ksql.function.udf.Udf;
 import io.confluent.ksql.function.udf.UdfDescription;
 import io.confluent.ksql.function.udf.UdfParameter;
+import io.confluent.ksql.util.KsqlConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.GET;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -23,16 +25,20 @@ public class GetCityForIP implements Configurable {
   private DatabaseReader reader;
   private Logger log = LoggerFactory.getLogger(GetCityForIP.class);
 
+
   @Override
   public void configure(final Map<String, ?> props) {
+
     log.info("Configure run");
 
-    if (!props.containsKey("ksql.functions.getcityforip.geolite.db.path")) {
-      throw new ConfigException("Required property ksql.functions.getcityforip.geolite.db.path not found!");
+    String KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG = KsqlConfig.KSQ_FUNCTIONS_PROPERTY_PREFIX + "getcityforip.geolite.db.path";
+
+    if (!props.containsKey(KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG)) {
+      throw new ConfigException("Required property "+ KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG + " not found!");
     }
 
     File database;
-    final String geoliteDbPath = (String)props.get("ksql.functions.getcityforip.geolite.db.path");
+    final String geoliteDbPath = (String)props.get(KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG);
 
     try {
       database = new File(geoliteDbPath);
