@@ -5,6 +5,7 @@ import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.City;
 import io.confluent.common.Configurable;
+import io.confluent.common.config.ConfigException;
 import io.confluent.ksql.function.udf.Udf;
 import io.confluent.ksql.function.udf.UdfDescription;
 import io.confluent.ksql.function.udf.UdfParameter;
@@ -25,6 +26,11 @@ public class GetCityForIP implements Configurable {
   @Override
   public void configure(final Map<String, ?> props) {
     log.info("Configure run");
+
+    if (!props.containsKey("ksql.functions.getcityforip.geolite.db.path")) {
+      throw new ConfigException("Required property ksql.functions.getcityforip.geolite.db.path not found!");
+    }
+
     File database;
     final String geoliteDbPath = (String)props.get("ksql.functions.getcityforip.geolite.db.path");
 
@@ -43,7 +49,7 @@ public class GetCityForIP implements Configurable {
     @UdfParameter(value = "ip", description = "the IP address to lookup in the geoip database") String ip
   ) {
 
-    if (ip == "") {
+    if (ip == null || ip.equals("")) {
       return null;
     }
 
