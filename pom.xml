@@ -18,11 +18,13 @@
             <groupId>io.confluent.ksql</groupId>
             <artifactId>ksqldb-common</artifactId>
             <version>5.5.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.confluent.ksql</groupId>
             <artifactId>ksqldb-udf</artifactId>
             <version>${ksql.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>
@@ -33,6 +35,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -44,6 +47,7 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

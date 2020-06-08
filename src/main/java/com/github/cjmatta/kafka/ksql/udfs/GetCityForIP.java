@@ -28,7 +28,7 @@ public class GetCityForIP implements Configurable {
   @Override
   public void configure(final Map<String, ?> props) {
 
-    log.info("Configuring GetCityForIP function");
+    log.debug("Configuring GetCityForIP function");
 
     String KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG = KsqlConfig.KSQL_FUNCTIONS_PROPERTY_PREFIX + "getcityforip.geolite.db.path";
 
@@ -53,8 +53,6 @@ public class GetCityForIP implements Configurable {
   public String getcityforip(
     @UdfParameter(value = "ip", description = "the IP address to lookup in the geoip database") final String ip
   ) {
-    log.info("IP: " + ip);
-
     if (reader == null ) {
       log.error("No DB found");
     }
