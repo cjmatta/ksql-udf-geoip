@@ -9,19 +9,19 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <ksql.version>5.1.1</ksql.version>
+        <ksql.version>5.5.0</ksql.version>
         <geoip2.version>2.12.0</geoip2.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.confluent.ksql</groupId>
-            <artifactId>ksql-udf</artifactId>
-            <version>${ksql.version}</version>
+            <artifactId>ksqldb-common</artifactId>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>io.confluent.ksql</groupId>
-            <artifactId>ksql-common</artifactId>
+            <artifactId>ksqldb-udf</artifactId>
             <version>${ksql.version}</version>
         </dependency>
         <dependency>

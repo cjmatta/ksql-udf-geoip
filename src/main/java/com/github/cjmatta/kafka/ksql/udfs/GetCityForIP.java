@@ -4,7 +4,7 @@ import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.City;
-import io.confluent.common.Configurable;
+import org.apache.kafka.common.Configurable;
 import io.confluent.common.config.ConfigException;
 import io.confluent.ksql.function.udf.Udf;
 import io.confluent.ksql.function.udf.UdfDescription;
@@ -13,7 +13,6 @@ import io.confluent.ksql.util.KsqlConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.GET;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -29,9 +28,9 @@ public class GetCityForIP implements Configurable {
   @Override
   public void configure(final Map<String, ?> props) {
 
-    log.info("Configure run");
+    log.info("Configuring GetCityForIP function");
 
-    String KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG = KsqlConfig.KSQ_FUNCTIONS_PROPERTY_PREFIX + "getcityforip.geolite.db.path";
+    String KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG = KsqlConfig.KSQL_FUNCTIONS_PROPERTY_PREFIX + "getcityforip.geolite.db.path";
 
     if (!props.containsKey(KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG)) {
       throw new ConfigException("Required property "+ KSQL_FUNCTIONS_GETCITYFORIP_GEOLITE_DB_PATH_CONFIG + " not found!");
@@ -52,11 +51,12 @@ public class GetCityForIP implements Configurable {
 
   @Udf(description = "returns city from IP input")
   public String getcityforip(
-    @UdfParameter(value = "ip", description = "the IP address to lookup in the geoip database") String ip
+    @UdfParameter(value = "ip", description = "the IP address to lookup in the geoip database") final String ip
   ) {
+    log.info("IP: " + ip);
 
-    if (ip == null || ip.equals("")) {
-      return null;
+    if (reader == null ) {
+      log.error("No DB found");
     }
 
     try {
